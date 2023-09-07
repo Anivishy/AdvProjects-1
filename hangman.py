@@ -12,3 +12,7 @@ WINDOW_HEIGHT = 300
  
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption('Hangman')
+
+word_file = open("words.txt", "r")
+
+wordlist = word_file.readlines()
