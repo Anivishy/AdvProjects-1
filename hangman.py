@@ -18,12 +18,21 @@ word_file = open("words.txt", "r")
 wordlist = word_file.readlines()
 
 def pick_word():
-    return wordlist[random.randint(0, len(wordlist))]
+    return wordlist[random.randint(0, len(wordlist) - 1)]
+
+def check_word(letter :str, word :str):    
+    if letter in word:
+        return True
 
 running = True
-while running:
+target_word = pick_word()
+print(target_word)
+while running:    
     for event in pygame.event.get():
-        print(event)
+        if event.type == pygame.KEYDOWN:
+            print(event.unicode)           
         if event.type == pygame.QUIT:
             running = False
+            
+
             
