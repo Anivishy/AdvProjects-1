@@ -1,5 +1,6 @@
-import pygame, sys, random
+import pygame, sys, random, time, re
 from pygame.locals import *
+
 pygame.init()
 
 #window init
@@ -8,11 +9,12 @@ FPS =  60
 fps_clock = pygame.time.Clock()
 WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 300 
-WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), 0, 32)
 pygame.display.set_caption('Hangman')
 
 #font init
-font = pygame.font.SysFont('arial', 50)
+font_big = pygame.font.SysFont('arial', 40)
+font_small = pygame.font.SysFont('arial', 30)
 
 #wordlist init
 word_file = open("words.txt", "r")
