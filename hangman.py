@@ -46,8 +46,8 @@ def hangman_draw_init():
     pygame.draw.line(surface, GREY, (125, 210), (125, 300), 3) #body
     pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left hand
     pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right hand
-    pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left leg
-    pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right leg
+    pygame.draw.line(surface, GREY, (125, 300), (75, 300), 3) #left leg
+    pygame.draw.line(surface, GREY, (125, 300), (175, 300), 3) #right leg
     
 def hangman_draw(errors: int):
     if errors == 0:
@@ -81,7 +81,7 @@ def hangman_draw(errors: int):
         pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left hand
         pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right hand
         pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left leg
-        pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right right leg
+        pygame.draw.line(surface, GREY, (125, 210), (300, 250), 3) #right right leg
         
 running = True
 target_word = pick_word()
@@ -90,16 +90,33 @@ surface.fill(BLACK)
 hangman_draw_init()
 pygame.display.update() 
 
-while running:    
-    
-    
+while running:
+    difficulty = 0  
     for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.QUIT:
+            running = False
+
+        elif event.type == MOUSEBUTTONDOWN:
+            #easy difficulty
+            if(pygame.mouse.getpos()[0] > x and
+               pygame.mouse.get_post()[1] > y
+            ):
+                pass
+
+
+            #hard difficulty
+            if(pygame.mouse.getpos()[0] > x and
+               pygame.mouse.get_post()[1] > y
+            ):
+                pass
+
+        elif event.type == pygame.KEYDOWN:
             letter = event.unicode
             print(event.unicode)
                        
-        if event.type == pygame.QUIT:
-            running = False
+        
             
+
+
 
             
