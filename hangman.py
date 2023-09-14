@@ -7,6 +7,9 @@ pygame.init()
 GREY = (128, 128, 128)
 WHITE = (225, 225, 225)
 BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
 
 #window init
 FPS =  60
@@ -44,11 +47,42 @@ def hangman_draw_init():
     pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left hand
     pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right hand
     pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left leg
-    pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right right leg
+    pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right leg
     
-    
-   
-
+def hangman_draw(errors: int):
+    if errors == 0:
+        hangman_draw_init()
+    elif errors == 1:
+        pygame.draw.line(surface, GREY, (25,400), (200,400), 10) #platform
+    elif errors == 2:
+        pygame.draw.line(surface, GREY, (50,400), (50,100), 10) #post
+    elif errors == 3:
+        pygame.draw.line(surface, GREY, (25,100), (150,100), 10) #top
+    elif errors == 4:
+        pygame.draw.line(surface, GREY, (125,100), (125,150), 10) #rope
+    elif errors == 5:
+        pygame.draw.circle(surface, GREY, (125, 180), 30, 3) #head
+    elif errors == 6:
+        pygame.draw.line(surface, GREY, (125, 210), (125, 300), 3) #body
+    elif errors == 7:
+        pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left hand
+    elif errors == 8:
+        pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right hand
+    elif errors == 9:
+        pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left leg
+    elif errors == 8:
+        #game over
+        pygame.draw.line(surface, GREY, (25,400), (200,400), 10) #platform
+        pygame.draw.line(surface, GREY, (50,400), (50,100), 10) #post
+        pygame.draw.line(surface, GREY, (25,100), (150,100), 10) #top
+        pygame.draw.line(surface, GREY, (125,100), (125,150), 10) #rope
+        pygame.draw.circle(surface, GREY, (125, 180), 30, 3) #head
+        pygame.draw.line(surface, GREY, (125, 210), (125, 300), 3) #body
+        pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left hand
+        pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right hand
+        pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left leg
+        pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right right leg
+        
 running = True
 target_word = pick_word()
 print(target_word)
