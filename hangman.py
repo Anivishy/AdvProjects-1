@@ -44,28 +44,44 @@ def hangman_draw_init():
     pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left hand
     pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right hand
     pygame.draw.line(surface, GREY, (125, 210), (75, 250), 3) #left leg
-    pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right right leg
-    
+    pygame.draw.line(surface, GREY, (125, 210), (175, 250), 3) #right right leg  
     
    
 
 running = True
+
+
+while running:
+    difficulty = 0  
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        elif event.type == MOUSEBUTTONDOWN:
+            #easy difficulty
+            if(pygame.mouse.getpos()[0] > x and
+               pygame.mouse.get_post()[1] > y
+            ):
+                pass
+
+
+            #hard difficulty
+            if(pygame.mouse.getpos()[0] > x and
+               pygame.mouse.get_post()[1] > y
+            ):
+                pass
+
+        elif event.type == pygame.KEYDOWN:
+            letter = event.unicode
+            print(event.unicode)
+                       
+        
+            
+
+
 target_word = pick_word()
 print(target_word)
 surface.fill(BLACK)
 hangman_draw_init()
 pygame.display.update() 
-
-while running:    
-    
-    
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            letter = event.unicode
-            print(event.unicode)
-                       
-        if event.type == pygame.QUIT:
-            running = False
-            
-
             
