@@ -13,6 +13,10 @@ BLUE = (0, 0, 255)
 DARK_GREEN = (0, 181, 3)
 DARK_RED = (171, 2, 2)
 
+#mouse init
+LEFT_CLICK = (1,0,0)
+RIGHT_CLICK = (0,0,1)
+
 #window init
 FPS =  60
 fps_clock = pygame.time.Clock()
@@ -27,14 +31,23 @@ font_small = pygame.font.SysFont('arial', 20)
 
 #wordlist init
 word_file = open("words.txt", "r")
-wordlist = word_file.readlines()
-
+temp_wordlist = word_file.readlines()
+wordlist = []
+for i in range(len(temp_wordlist)):
+    wordlist.append(temp_wordlist[i].strip("\n"))
+print(wordlist)
 #wordlist functions
 def pick_word_esasy():
-    return wordlist[random.randint(0, len(wordlist) - 1)]
+    word =  wordlist[random.randint(0, len(wordlist) - 1)] 
+    while len(word) > 5:
+        word =  wordlist[random.randint(0, len(wordlist) - 1)]      
+    return word
 
 def pick_word_hard():
-    return wordlist[random.randint(0, len(wordlist) - 1)]
+    word =  wordlist[random.randint(0, len(wordlist) - 1)] 
+    while len(word) <= 5:
+        word =  wordlist[random.randint(0, len(wordlist) - 1)]      
+    return word
 
 
 def check_word(letter :str, word :str):    
@@ -43,7 +56,7 @@ def check_word(letter :str, word :str):
     
 #hangman drawing
 def hangman_draw_init():
-    #pygame.draw.line(surface, GREY, (25,400), (200,400), 10)
+    #pygame.draw.line(surface, GREY, (25,400), (200,400), 10) (template)
     pygame.draw.line(surface, GREY, (25,400), (200,400), 10) #platform
     pygame.draw.line(surface, GREY, (50,400), (50,100), 10) #post
     pygame.draw.line(surface, GREY, (25,100), (150,100), 10) #top
@@ -59,48 +72,23 @@ def hangman_draw(errors: int):
     if errors == 0:
         hangman_draw_init()
     elif errors == 1:
-        hangman_draw_init()
         pygame.draw.line(surface, BLUE, (25,400), (200,400), 10) #platform
     elif errors == 2:
-        hangman_draw_init()
         pygame.draw.line(surface, BLUE, (50,400), (50,100), 10) #post
-        if errors > 1:
-            hangman_draw(errors - 1)
     elif errors == 3:
-        hangman_draw_init()
         pygame.draw.line(surface, BLUE, (25,100), (150,100), 10) #top
-        if errors > 1:
-            hangman_draw(errors - 1)
     elif errors == 4:
-        hangman_draw_init()
         pygame.draw.line(surface, BLUE, (125,100), (125,150), 10) #rope
-        if errors > 1:
-            hangman_draw(errors - 1)
     elif errors == 5:
-        hangman_draw_init()
         pygame.draw.circle(surface, BLUE, (125, 180), 30, 3) #head
-        if errors > 1:
-            hangman_draw(errors - 1)
     elif errors == 6:
-        hangman_draw_init()
         pygame.draw.line(surface, BLUE, (125, 210), (125, 300), 3) #body
-        if errors > 1:
-            hangman_draw(errors - 1)
     elif errors == 7:
-        hangman_draw_init()
         pygame.draw.line(surface, BLUE, (125, 210), (75, 250), 3) #left hand
-        if errors > 1:
-            hangman_draw(errors - 1)
     elif errors == 8:
-        hangman_draw_init()
         pygame.draw.line(surface, BLUE, (125, 210), (175, 250), 3) #right hand
-        if errors > 1:
-            hangman_draw(errors - 1)
     elif errors == 9:
-        hangman_draw_init()
-        pygame.draw.line(surface, BLUE, (125, 210), (75, 250), 3) #left leg
-        if errors > 1:
-            hangman_draw(errors - 1)
+        pygame.draw.line(surface, BLUE, (125, 300), (75, 350), 3) #left leg
     elif errors == 10:
         #game over
         pygame.draw.line(surface, RED, (25,400), (200,400), 10) #platform
@@ -136,39 +124,248 @@ def home_screen():
     surface.blit(text_easy, textbox_easy)
     surface.blit(text_hard, textbox_hard)
         
-running = True
-#target_word = pick_word()
-#print(target_word)
-surface.fill(BLACK)
-#home_screen()
-hangman_draw(10)
-pygame.display.update() 
-
-while running:
-    difficulty = 0  
-    errors = 0
+def main():
+    running = True
+    difficulty = 0
     home_screen()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    #loop for home screen, allows user to choose difficulty
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                pygame.quit()
+                sys.exit()
 
-        elif event.type == MOUSEBUTTONDOWN:
-            #easy difficulty
-            if(pygame.mouse.getpos()[0] > x and
-               pygame.mouse.get_post()[1] > y
-            ):
-                target = pick_word_esasy()
+            elif event.type == MOUSEBUTTONDOWN:
+                #easy difficulty
+                if(pygame.mouse.get_pos()[0] >= 215 and\
+                pygame.mouse.get_pos()[1] >= 225 and\
+                pygame.mouse.get_pos()[0] <= 285 and\
+                pygame.mouse.get_pos()[1] <= 270
+                ):
+                    difficulty = 1
+                    running = False
+                    break
+
+                #hard difficulty
+                if(pygame.mouse.get_pos()[0] >= 215 and\
+                pygame.mouse.get_pos()[1] >= 310 and\
+                pygame.mouse.get_pos()[0] <= 285 and\
+                pygame.mouse.get_pos()[1] <= 355
+                ):                 
+                    difficulty = 2
+                    running = False
+                    break
+
+        if (difficulty!= 0):
+            surface.fill(BLACK)
+        
+        pygame.display.update()
+        pygame.time.Clock().tick(60)
+
+    target_word = ""
+    if difficulty == 1:
+        target_word = pick_word_esasy()
+    else:
+        target_word = pick_word_hard()
+
+    print(target_word)
+
+    dash_list = []
+    for i in range(len(target_word)):
+        dash_list.append("-")
+
+    #default vars
+    errors = 0
+    last_input = ""
+    game = True
+    Off = 0
+    cur_word = ""
+
+    #timer setup
+    init_time = 0
+    start_time = time.time()
+    surface.blit(font_big.render("Time:",True,WHITE),(300,10))
+    
+    #word display setup
+    dashes = font_big.render("".join(dash_list),True,WHITE)
+    dash_rect = dashes.get_rect()
+    dash_rect.center = (350,250)
+    surface.blit(dashes, dash_rect)
+    surface.blit(pygame.font.Font("freesansbold.ttf",15).render("1 To Quit",True,WHITE),(20,10))
+    
+    #main game loop
+    while game:
+        hangman_draw(errors)
+        cur_time = time.time()
+        if int(cur_time) - int(start_time) == 1:
+            pygame.draw.rect(surface,BLACK,(385,0,100,50))
+            init_time = init_time + 1 
+            timer = font_big.render(str(init_time),True,WHITE)
+            surface.blit(timer, (400,10))
+            start_time = time.time()
+
+        for event in pygame.event.get():
+            #quit game
+            if event.type == pygame.QUIT:
+                game = False
+            
+            elif event.type == KEYDOWN:
+                #user inputs letter
+                last_input = event.key
+                pygame.draw.rect(surface,BLACK,(220,200,280,100))
+                pygame.draw.rect(surface,BLACK,(260,50,200,100))
+                #check for if it is a valid input (a letter)
+                if re.search("[a-z]",chr(event.key)):
+                    #check for if guess is in the word
+                    if ((chr(event.key).upper() in target_word) or (chr(event.key).lower() in target_word)):
+                        for i in range(len(target_word)):
+                            if ((target_word[i] == (event.unicode).upper()) or (target_word[i] == (event.unicode).lower())):
+                                dash_list[i] = target_word[i]
+                            
+                    else:
+                        #adds one to errors, will be used to update the hang man
+                        errors += 1
+                    
+                    #re-renders the dashes
+                    dashes = font_big.render("".join(dash_list),True,WHITE)
+                    dash_rect = dashes.get_rect()
+                    dash_rect.center = (350,250)
+                    surface.blit(dashes, dash_rect)
+
+                else:
+                    #if the user chooses to quit the game, ask for confirmation
+                    if (event.unicode == "1"):
+                        surface.blit(font_big.render("EXIT?",True,RED),(340,220))
+                        surface.blit(font_small.render("Yes",True,BLUE),(340,270))
+                        surface.blit(font_small.render("No",True,BLUE),(415,270))
+
+                    else:
+                        #display "invalid input"
+                        Input = font_small.render("INVALID INPUT",True,RED)
+                        InputRect = Input.get_rect()
+                        InputRect.center = (350,100)
+                        surface.blit(Input, InputRect)
+                        surface.blit(dashes,dash_rect)
+
+            elif event.type == KEYUP:
+                pygame.draw.rect(surface,BLACK,(260,50,200,100))
+
+            elif event.type == MOUSEBUTTONDOWN:
+                #turn users choice (yes or no to quit) green
+                if (last_input == 49):
+                    if (pygame.mouse.get_pressed() == LEFT_CLICK):
+                        if (pygame.mouse.get_pos()[0] > 340 and\
+                            pygame.mouse.get_pos()[1] > 270 and\
+                            pygame.mouse.get_pos()[0] < 385 and\
+                            pygame.mouse.get_pos()[1] < 285):
+                            pygame.draw.rect(surface,BLACK,(340,270,35,25)) #hide yes
+                            surface.blit(font_small.render("Yes",True,GREEN),(340,270))
+
+                        elif (pygame.mouse.get_pos()[0] > 415 and\
+                            pygame.mouse.get_pos()[1] > 270 and\
+                            pygame.mouse.get_pos()[0] < 450 and\
+                            pygame.mouse.get_pos()[1] < 285):
+                            pygame.draw.rect(surface,BLACK,(415,270,35,25)) 
+                            surface.blit(font_small.render("No",True,GREEN),(415,270))
+            
+            elif event.type == MOUSEBUTTONUP:
+                #quit the game (yes)
+                if (last_input == 49):
+                    if (pygame.mouse.get_pos()[0] > 340 and\
+                    pygame.mouse.get_pos()[1] > 270 and\
+                    pygame.mouse.get_pos()[0] < 385 and\
+                    pygame.mouse.get_pos()[1] < 285):
+                        game = False
+                        pygame.quit()
+                        sys.exit()
+                        break
+
+                    #continue game (no)
+                    elif (pygame.mouse.get_pos()[0] > 415 and\
+                        pygame.mouse.get_pos()[1] > 270 and\
+                        pygame.mouse.get_pos()[0] < 450 and\
+                        pygame.mouse.get_pos()[1] < 285):
+                        pygame.draw.rect(surface,BLACK,(415,270,35,25)) #hide no
+                        surface.blit(font_small.render("No",True,GREEN),(415,270))
+                        pygame.draw.rect(surface,BLACK,(300,200,200,100)) #hide exit, yes,no
+
+                        dashes = font_big.render("".join(dash_list),True,BLACK)
+                        dash_list = dashes.get_rect()
+                        dash_rect.center = (400,250)
+                        surface.blit(dashes,dash_rect)
+
+                        last_input = ""
+
+                    else:
+                        pygame.draw.rect(surface,WHITE,(340,270,35,25)) 
+                        surface.blit(font_small.render("Yes",True,BLUE),(340,270))
+                        pygame.draw.rect(surface,WHITE,(415,270,35,25)) 
+                        surface.blit(font_small.render("No",True,BLUE),(415,270))
+
+        if (errors == 10):
+            #if the users has lost (hangman is fully collored in)
+            surface.fill(BLACK)
+            hangman_draw(errors)
+            game_over = font_big.render("GAME OVER",True,RED)
+            game_over_rect = game_over.get_rect()
+            game_over_rect.center = (400,250)
+            surface.blit(game_over,game_over_rect)
+            Off = 1
+
+            #reveal the word
+            Word = font_small.render("The word was:",True,RED)
+            WordRect = Word.get_rect()
+            WordRect.center = (400,300)
+            surface.blit(Word,WordRect)
+
+            Word2 = font_big.render(target_word,True,RED)
+            Word2Rect = Word2.get_rect()
+            Word2Rect.center = (400,335)
+            surface.blit(Word2,Word2Rect)
+
+        elif (target_word == "".join(dash_list)):
+            print("test2")
+            surface.fill(BLACK)
+            congrats = font_big.render("CONGRATS, YOU WON",True,GREEN)
+            congrats_rect = congrats.get_rect()
+            congrats_rect.center = (250,220)
+            surface.blit(congrats,congrats_rect)
+
+            #reveal the word
+            Word = font_small.render("The word was:",True,WHITE)
+            WordRect = Word.get_rect()
+            WordRect.center = (250,250)
+            surface.blit(Word,WordRect)
+
+            Word2 = font_big.render(target_word,True,WHITE)
+            Word2Rect = Word2.get_rect()
+            Word2Rect.center = (250,285)
+            surface.blit(Word2,Word2Rect)
+            
+            Off = 1          
+
+        pygame.display.update()
+        pygame.time.Clock().tick(60) 
+        
+        if (Off == 1):
+            #5 second delay before closing game window
+            time.sleep(5)
+            pygame.quit()
+            sys.exit()   
+
+main()         
+                                
 
 
-            #hard difficulty
-            if(pygame.mouse.getpos()[0] > x and
-               pygame.mouse.get_post()[1] > y
-            ):
-                target = pick_word_hard()
 
-        elif event.type == pygame.KEYDOWN:
-            letter = event.unicode
-            print(event.unicode)
+    
+
+
+
+        # elif event.type == pygame.KEYDOWN:
+        #     letter = event.unicode
+        #     print(event.unicode)
                        
         
             
